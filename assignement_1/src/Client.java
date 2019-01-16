@@ -25,8 +25,7 @@ public class Client {
         }
     }
 
-    byte[] concat(byte[]...arrays)
-    {
+    byte[] concat(byte[]...arrays) {
         // Determine the length of the result array
         int totalLength = 0;
         for (int i = 0; i < arrays.length; i++)
@@ -39,8 +38,7 @@ public class Client {
 
         // copy the source arrays into the result array
         int currentIndex = 0;
-        for (int i = 0; i < arrays.length; i++)
-        {
+        for (int i = 0; i < arrays.length; i++) {
             System.arraycopy(arrays[i], 0, result, currentIndex, arrays[i].length);
             currentIndex += arrays[i].length;
         }
@@ -53,7 +51,8 @@ public class Client {
         String mode = "MODE";
         byte prefix[] = new byte[]{(byte) 0, (byte) 1};
         byte postfix[] = new byte[]{(byte) 0};
-        return concat(prefix, filename.getBytes(), mode.getBytes(), postfix);
+        byte lineBreak[] = new byte[]{(byte) 0};
+        return concat(prefix, filename.getBytes(), lineBreak, mode.getBytes(), postfix);
     }
 
     public byte[] getWriteMessage() {
@@ -61,12 +60,30 @@ public class Client {
         String mode = "MODE";
         byte prefix[] = new byte[]{(byte) 0, (byte) 2};
         byte postfix[] = new byte[]{(byte) 0};
+        byte lineBreak[] = new byte[]{(byte) 0};
+        return concat(prefix, filename.getBytes(), lineBreak, mode.getBytes(), postfix);
+    }
+
+    public byte[] getInvalidMessage() {
+        String filename = "FILENAME";
+        String mode = "MODE";
+        byte prefix[] = new byte[]{(byte) 1, (byte) 3};
+        byte postfix[] = new byte[]{(byte) 2};
+        byte lineBreak[] = new byte[]{(byte) 0};
         return concat(prefix, filename.getBytes(), mode.getBytes(), postfix);
     }
 
-    public void sendAndReceive()
+    public void sendAndReceive(char messageType)
     {
-        byte msg[] = getReadMessage();
+        byte msg[];
+        switch (messageType) {
+            case 'r': msg = getReadMessage();
+                      break;
+            case 'w': msg = getWriteMessage();
+                      break;
+            default: msg = getInvalidMessage();
+                     break;
+        }
         // Prepare a DatagramPacket and send it via sendReceiveSocket
         // to port 5000 on the destination host.
 
@@ -138,9 +155,12 @@ public class Client {
         sendReceiveSocket.close();
     }
 
-    public static void main(String args[])
-    {
+    public static void main(String args[]) {
         Client c = new Client();
-        c.sendAndReceive();
+        for(int i=0;i<11;i++) {
+            char mType = i%2 == 0 ? 'w' : 'r';
+            c.sendAndReceive(mType);
+        }
+        c.sendAndReceive('i');
     }
 }
