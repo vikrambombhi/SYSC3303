@@ -3,7 +3,6 @@ import java.net.*;
 import java.util.Arrays;
 
 public class Intermediate {
-
   DatagramPacket sendPacket, receivePacket;
   DatagramSocket sendAndReceive, receiveSocket;
 
@@ -28,11 +27,8 @@ public class Intermediate {
   }
 
   public void receive(byte[] data, DatagramSocket socket) {
-    // Construct a DatagramPacket for receiving packets up
-    // to 100 bytes long (the length of the byte array).
-
     receivePacket = new DatagramPacket(data, data.length);
-    System.out.println("Proxy: Waiting for Packet.\n");
+    System.out.println("Intermediatary: Waiting for Packet.\n");
 
     // Block until a datagram packet is received from receiveSocket.
     try {
@@ -45,7 +41,7 @@ public class Intermediate {
     }
 
     // Process the received datagram.
-    System.out.println("Proxy: Packet received:");
+    System.out.println("Intermediatary: Packet received:");
     System.out.println("From host: " + receivePacket.getAddress());
     System.out.println("Host port: " + receivePacket.getPort());
     int len = receivePacket.getLength();
@@ -56,7 +52,7 @@ public class Intermediate {
   }
 
   public void send() {
-    System.out.println("Proxy: Sending packet:");
+    System.out.println("Intermediatary: Sending packet:");
     System.out.println("To host: " + sendPacket.getAddress());
     System.out.println("Destination host port: " + sendPacket.getPort());
     int len = sendPacket.getLength();
@@ -64,8 +60,6 @@ public class Intermediate {
     String str  = new String(sendPacket.getData(), 0, len);
     System.out.println("Containing: " + str);
     System.out.println("Containing (bytes): " + Arrays.toString(sendPacket.getData()));
-    // or (as we should be sending back the same thing)
-    // System.out.println(received);
 
     // Send the datagram packet to the client via the send socket.
     try {
@@ -75,7 +69,7 @@ public class Intermediate {
       System.exit(1);
     }
 
-    System.out.println("Proxy: packet sent");
+    System.out.println("Intermediatary: packet sent");
   }
 
   public void receiveAndForward() {
@@ -85,7 +79,7 @@ public class Intermediate {
     InetAddress originAddress = receivePacket.getAddress();
     int originPort = receivePacket.getPort();
 
-    // create new data packet but addressed to upstream
+    // create new data packet but change the address to the server
     try {
       sendPacket = new DatagramPacket(data, receivePacket.getLength(), InetAddress.getLocalHost(), 69);
     } catch (UnknownHostException e) {
