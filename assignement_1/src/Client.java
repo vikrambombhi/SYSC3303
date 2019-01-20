@@ -1,5 +1,3 @@
-package assignment1;
-
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
@@ -81,8 +79,6 @@ public class Client {
       default: msg = getInvalidMessage();
                break;
     }
-    // Prepare a DatagramPacket and send it via sendReceiveSocket
-    // to port 5000 on the destination host.
 
     // Construct a datagram packet that is to be sent to a specified port
     // on a specified host.
@@ -95,7 +91,7 @@ public class Client {
     //     the source (i.e., we want to run the client and server on the
     //     same computer). InetAddress.getLocalHost() returns the Internet
     //     address of the local host.
-    //  5000 - the destination port number on the destination host.
+    //  23 - the destination port number on the destination host.
     try {
       sendPacket = new DatagramPacket(msg, msg.length, InetAddress.getLocalHost(), 23);
     } catch (UnknownHostException e) {
@@ -103,7 +99,7 @@ public class Client {
       System.exit(1);
     }
 
-    System.out.println("Client: Sending packet:");
+    System.out.println("\nClient: Sending packet:");
     System.out.println("To host: " + sendPacket.getAddress());
     System.out.println("Destination host port: " + sendPacket.getPort());
     int len = sendPacket.getLength();
@@ -112,22 +108,19 @@ public class Client {
     System.out.println(new String(sendPacket.getData(),0,len)); // or could print "s"
 
     // Send the datagram packet to the server via the send/receive socket.
-
     try {
       sendReceiveSocket.send(sendPacket);
     } catch (IOException e) {
       e.printStackTrace();
       System.exit(1);
     }
-
-    System.out.println("Client: Packet sent.\n");
+    System.out.println("Client: Packet sent.");
 
     // Construct a DatagramPacket for receiving packets up
     // to 100 bytes long (the length of the byte array).
-
     byte data[] = new byte[100];
     receivePacket = new DatagramPacket(data, data.length);
-
+    System.out.println("Client: Waiting for Packet.\n");
     try {
       // Block until a datagram is received via sendReceiveSocket.
       sendReceiveSocket.receive(receivePacket);
@@ -142,14 +135,9 @@ public class Client {
     System.out.println("Host port: " + receivePacket.getPort());
     len = receivePacket.getLength();
     System.out.println("Length: " + len);
-    System.out.print("Containing: ");
-
     // Form a String from the byte array.
     String received = new String(data,0,len);
-    System.out.println(received);
-
-    // We're finished, so close the socket.
-    sendReceiveSocket.close();
+    System.out.printf("Containing: %s\n", received);
   }
 
   public static void main(String args[]) {

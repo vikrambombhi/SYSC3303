@@ -1,5 +1,3 @@
-package assignment1;
-
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
@@ -36,7 +34,7 @@ public class Server {
     }
   }
 
-  public void receive(byte[] data) {
+  private void receive(byte[] data) {
     receivePacket = new DatagramPacket(data, data.length);
     System.out.println("Server: Waiting for Packet.\n");
 
@@ -67,7 +65,7 @@ public class Server {
     }
   }
 
-  public void send() {
+  private void send() {
     System.out.println("Server: Sending packet:");
     System.out.println("To host: " + sendPacket.getAddress());
     System.out.println("Destination host port: " + sendPacket.getPort());
@@ -152,8 +150,9 @@ public class Server {
         send();
       }
     } catch (Exception e) {
-      e.printStackTrace();
-      close();
+        System.out.println("Server quiting.");
+        e.printStackTrace();
+        close();
     }
   }
 

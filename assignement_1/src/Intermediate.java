@@ -1,15 +1,13 @@
-package assignment1;
-
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
 
-public class Proxy {
+public class Intermediate {
 
   DatagramPacket sendPacket, receivePacket;
   DatagramSocket sendAndReceive, receiveSocket;
 
-  public Proxy() {
+  public Intermediate() {
     try {
       // Construct a datagram socket and bind it to any available
       // port on the local host machine. This socket will be used to
@@ -122,7 +120,7 @@ public class Proxy {
   }
 
   public static void main(String args[]) {
-    Proxy p = new Proxy();
-    p.run();
+    Intermediate proxy = new Intermediate();
+    proxy.run();
   }
 }

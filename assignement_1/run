@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd build || return
+
+trap 'kill $(jobs -p)' EXIT
+
+java Server &
+java Intermediate &
+java Client
