@@ -1,3 +1,5 @@
 build/
 **/build/
 **/*.zip
+**/*.jar
+*/*.jar
